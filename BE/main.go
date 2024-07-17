@@ -55,5 +55,5 @@ func main() {
         c.JSON(http.StatusOK, gin.H{"message": "Sign in successful"})
     })
 
-    r.Run(":8080")
+    r.Run()
 }
