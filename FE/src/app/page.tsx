@@ -29,13 +29,13 @@ const Home = () => {
 
     try {
       if (isSignIn) {
-        await axios.post("http://localhost:8080/signin", {
+        await axios.post("https://login-web-be.vercel.app/signin", {
           email,
           password,
         });
         router.push("/dashboard");
       } else {
-        await axios.post("http://localhost:8080/signup", {
+        await axios.post("https://login-web-be.vercel.app/signup", {
           email,
           password,
         });

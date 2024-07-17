@@ -23,7 +23,7 @@ func main() {
     r := gin.Default()
 
     r.Use(cors.New(cors.Config{
-        AllowOrigins:     []string{"https://login-mdc4njyx9-muhhuls-projects.vercel.app/"},
+        AllowOrigins:     []string{"https://login-web-test.vercel.app/"},
         AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
         AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
         ExposeHeaders:    []string{"Content-Length"},
