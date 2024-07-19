@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"login-web/app/models"
 	"regexp"
 	"strings"
@@ -52,12 +53,15 @@ func (server *Server) Register(c *fiber.Ctx) error {
 
 	result := server.DB.Create(&user)
 	if result.Error != nil {
-		return c.Status(500).JSON(fiber.Map{
+		log.Println("3")
+		c.Status(500)
+		return c.JSON(fiber.Map{
 			"message": "Could not register user",
 		})
 	}
 
-	return c.Status(200).JSON(fiber.Map{
+	c.Status(200)
+	return c.JSON(fiber.Map{
 		"message": "User registered successfully",
 	})
 }

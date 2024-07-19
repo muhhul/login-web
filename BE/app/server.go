@@ -28,7 +28,7 @@ func Run() {
 
 	appConfig.AppName = getEnv("APP_NAME", "Login Web")
 	appConfig.AppEnv = getEnv("APP_ENV", "development")
-	appConfig.AppPort = getEnv("APP_PORT", "3000")
+	appConfig.AppPort = getEnv("APP_PORT", "8080")
 
 	dbConfig.DBHost = getEnv("DB_HOST", "localhost")
 	dbConfig.DBUser = getEnv("DB_USER", "user")

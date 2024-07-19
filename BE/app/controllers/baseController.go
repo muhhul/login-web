@@ -7,16 +7,15 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gorilla/mux"
-	"github.com/urfave/cli"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/urfave/cli/v2"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 type Server struct {
-	DB     *gorm.DB
-	Router *mux.Router
-	App    *fiber.App
+	DB  *gorm.DB
+	App *fiber.App
 }
 
 type AppConfig struct {
@@ -37,9 +36,14 @@ func (server *Server) Initialize(dbConfig DBConfig) {
 	fmt.Println("we are initializing the server")
 
 	server.App = fiber.New()
-	server.Router = mux.NewRouter()
+
+	// Tambahkan middleware CORS
+	server.App.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:3000",
+		AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
+	}))
+
 	server.InitializeDB(dbConfig)
-	// server.initializeRoutes()
 	server.Setup(server.App)
 }
 
@@ -67,13 +71,14 @@ func (server *Server) dbMigrate() {
 func (server *Server) InitCommands(dbConfig DBConfig) {
 	server.InitializeDB(dbConfig)
 
-	cmdApp := cli.NewApp()
-	cmdApp.Commands = []cli.Command{
-		{
-			Name: "db:migrate",
-			Action: func(c *cli.Context) error {
-				server.dbMigrate()
-				return nil
+	cmdApp := &cli.App{
+		Commands: []*cli.Command{
+			{
+				Name: "db:migrate",
+				Action: func(c *cli.Context) error {
+					server.dbMigrate()
+					return nil
+				},
 			},
 		},
 	}

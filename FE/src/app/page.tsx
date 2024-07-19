@@ -28,16 +28,25 @@ const Home = () => {
     }
 
     try {
+      const data = {
+        email: email,
+        password: password,
+      };
+
+      console.log("Data yang dikirim:", data);
+
       if (isSignIn) {
-        await axios.post("https://login-web-be.vercel.app/signin", {
-          email,
-          password,
+        await axios.post("http://localhost:8000/api/login", data, {
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
         router.push("/dashboard");
       } else {
-        await axios.post("https://login-web-be.vercel.app/signup", {
-          email,
-          password,
+        await axios.post("http://localhost:8000/api/register", data, {
+          headers: {
+            "Content-Type": "application/json",
+          },
         });
         setEmail("");
         setPassword("");
@@ -46,8 +55,8 @@ const Home = () => {
         setIsSignIn(true);
         router.push("/");
       }
-    } catch (error) {
-      setError("An error occurred. Please try again.");
+    } catch (error: any) {
+      setError(error.response.data.message);
     }
   };
 
@@ -73,7 +82,10 @@ const Home = () => {
                 className="appearance-none rounded-none relative block bg-[#f4f4f5] w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setError("");
+                }}
               />
             </div>
             <div>
