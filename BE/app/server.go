@@ -1,31 +1,47 @@
 package app
 
 import (
-	"fmt"
+	"flag"
 	"log"
-	"net/http"
+	"login-web/app/controllers"
+	"os"
 
-	"github.com/gorilla/mux"
-	"gorm.io/gorm"
+	"github.com/joho/godotenv"
 )
 
-type Server struct {
-	DB *gorm.DB
-	Router *mux.Router
+func getEnv(key, fallback string) string {
+	if value, exists := os.LookupEnv(key); exists {
+		return value
+	}
+	return fallback
 }
 
-func (server *Server) Initialize() {
-	fmt.Println("we are initializing the server")
-	server.Router = mux.NewRouter()
-}
+func Run() {
+	var server = controllers.Server{}
+	var appConfig = controllers.AppConfig{}
+	var dbConfig = controllers.DBConfig{}
 
-func (server *Server) Run(addr string) {
-	fmt.Printf("Listening to port %s", addr)
-	log.Fatal(http.ListenAndServe(addr, server.Router))
-}
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error getting env, %v", err)
+	}
 
-func Run(){
-	var server = Server{}
-	server.Initialize()
-	server.Run(":3000")
+	appConfig.AppName = getEnv("APP_NAME", "Login Web")
+	appConfig.AppEnv = getEnv("APP_ENV", "development")
+	appConfig.AppPort = getEnv("APP_PORT", "3000")
+
+	dbConfig.DBHost = getEnv("DB_HOST", "localhost")
+	dbConfig.DBUser = getEnv("DB_USER", "user")
+	dbConfig.DBPassword = getEnv("DB_PASSWORD", "password")
+	dbConfig.DBName = getEnv("DB_NAME", "login_web")
+	dbConfig.DBPort = getEnv("DB_PORT", "5432")
+
+	flag.Parse()
+	arg := flag.Arg(0)
+	if arg != "" {
+		server.InitCommands(dbConfig)
+	} else {
+		server.Initialize(dbConfig)
+		server.Run(":" + appConfig.AppPort)
+	}
 }
