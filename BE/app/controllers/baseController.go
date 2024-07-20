@@ -14,8 +14,9 @@ import (
 )
 
 type Server struct {
-	DB  *gorm.DB
-	App *fiber.App
+	DB   *gorm.DB
+	App  *fiber.App
+	User models.User
 }
 
 type AppConfig struct {

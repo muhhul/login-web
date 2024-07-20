@@ -46,6 +46,7 @@ func (server *Server) Login(c *fiber.Ctx) error {
 		HTTPOnly: true,
 	}
 	c.Cookie(&cookie)
+	server.User = user
 	return c.JSON(fiber.Map{
 		"message": "Login successful",
 		"user":    user,

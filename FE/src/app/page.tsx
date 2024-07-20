@@ -32,9 +32,6 @@ const Home = () => {
         email: email,
         password: password,
       };
-
-      console.log("Data yang dikirim:", data);
-
       if (isSignIn) {
         await axios.post("http://localhost:8000/api/login", data, {
           headers: {
